@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: Api-Documentation
+  description: Welcome to The Electron Lover. A tutorial on best API Documentation
+    tools - Swagger and Redoc.
+  termsOfService: http://infiiot.com/terms-of-service
+  contact:
+    name: Infiniti Systems
+    url: http://infiiot.com/contact-us
+    email: electron@infinitisystems.com
+  license:
+    name: Copyright Infi-IoT 2020. All rights reserved
+  version: v1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/electron-lover3/Api-Documentation/v1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://infiiot.com/api/v1.0/
+  description: development server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Auth
+- name: User
+paths:
+  /login:
+    post:
+      tags:
+      - Auth
+      description: verifies a user and return Tokenid
+      operationId: login
+      parameters:
+      - name: login_username
+        in: query
+        description: username of the user
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: username
+      - name: login_password
+        in: query
+        description: password of the user
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: password
+      responses:
+        "200":
+          description: User is recognized and token is sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+        "400":
+          description: Error 400
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+  /logout:
+    post:
+      tags:
+      - Auth
+      description: verifies a user and and his session
+      operationId: logout
+      parameters:
+      - name: token
+        in: header
+        description: user's token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 484513554-541365914-46104621-58451657
+      responses:
+        "200":
+          description: User is recognized and token is sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Error 400
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+  /get-User:
+    get:
+      tags:
+      - User
+      description: verifies a user and gets his details
+      operationId: Get User Details
+      parameters:
+      - name: token
+        in: header
+        description: user's token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 484513554-541365914-46104621-58451657
+      responses:
+        "200":
+          description: User is recognized and token is sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+        "400":
+          description: Error 400
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+components:
+  schemas:
+    "400":
+      type: object
+      properties:
+        error:
+          type: string
+          example: Bad-Request -- Invalid body in your request
+      description: Schema for 400
+    Login:
+      type: object
+      properties:
+        token:
+          type: string
+          example: 484513554-541365914-46104621-58451657
+      description: Schema for login
+    UserDetails:
+      type: object
+      properties:
+        username:
+          type: string
+          example: the-electron-lover
+        info:
+          type: string
+          example: technical lead at infiniti systems
+        bday:
+          type: string
+          example: 09-11-1998
+      description: Schema for User
+    inline_response_200:
+      type: object
+      properties:
+        success:
+          type: string
+          example: User Logged out successfully!
+  securitySchemes:
+    ApiAuthKey:
+      type: apiKey
+      name: X-Auth-Token
+      in: header
